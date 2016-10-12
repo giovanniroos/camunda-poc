@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://activiti.org/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_BoaKEJBREea6eZ_6-WfvtA" exporter="camunda modeler" exporterVersion="2.6.0" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="event-sub-process" name="event-sub-process" isExecutable="true">
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:serviceTask id="send-message" camunda:class="za.co.discoverygrouprisk.SendMessageTaskDelegate" camunda:async="true" name="Send Message">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" name="" sourceRef="send-message" targetRef="UserTask_1"/>
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
+    <bpmn2:userTask id="UserTask_1" name="UserTask_1">
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="UserTask_1" targetRef="EndEvent_1"/>
+    <bpmn2:scriptTask id="ScriptTask_1" name="ScriptTask_1">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[execution.setVariable("processInstanceId",execution.getProcessInstanceId());]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="ScriptTask_1" targetRef="send-message"/>
+    <bpmn2:subProcess id="SubProcess_1" triggeredByEvent="true">
+      <bpmn2:serviceTask id="do-task" camunda:class="za.co.discoverygrouprisk.MyTestDelegate" camunda:async="true" name="Do Task">
+        <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+      </bpmn2:serviceTask>
+      <bpmn2:endEvent id="EndEvent_2">
+        <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      </bpmn2:endEvent>
+      <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="do-task" targetRef="EndEvent_2"/>
+      <bpmn2:startEvent id="StartEvent_2" name="StartEvent_2" isInterrupting="false">
+        <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+        <bpmn2:messageEventDefinition id="MessageEventDefinition_1" messageRef="Message_1"/>
+      </bpmn2:startEvent>
+      <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="StartEvent_2" targetRef="do-task"/>
+    </bpmn2:subProcess>
+  </bpmn2:process>
+  <bpmn2:message id="Message_1" name="DOTASK"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="event-sub-process">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_175" bpmnElement="StartEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="70.0" y="232.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="88.0" y="273.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ScriptTask_95" bpmnElement="ScriptTask_1">
+        <dc:Bounds height="80.0" width="100.0" x="156.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="_BPMNShape_StartEvent_175" targetElement="_BPMNShape_ScriptTask_95">
+        <di:waypoint xsi:type="dc:Point" x="106.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="156.0" y="250.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="130.0" y="266.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_620" bpmnElement="send-message">
+        <dc:Bounds height="80.0" width="100.0" x="306.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_ScriptTask_95" targetElement="_BPMNShape_ServiceTask_620">
+        <di:waypoint xsi:type="dc:Point" x="256.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="306.0" y="250.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="257.0" y="313.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_UserTask_55" bpmnElement="UserTask_1">
+        <dc:Bounds height="80.0" width="100.0" x="456.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="_BPMNShape_ServiceTask_620" targetElement="_BPMNShape_UserTask_55">
+        <di:waypoint xsi:type="dc:Point" x="406.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="456.0" y="250.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="407.0" y="313.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_246" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="606.0" y="232.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="624.0" y="273.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="_BPMNShape_UserTask_55" targetElement="_BPMNShape_EndEvent_246">
+        <di:waypoint xsi:type="dc:Point" x="556.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="606.0" y="250.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="557.0" y="313.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_SubProcess_90" bpmnElement="SubProcess_1" isExpanded="true">
+        <dc:Bounds height="121.0" width="310.0" x="96.0" y="60.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_176" bpmnElement="StartEvent_2">
+        <dc:Bounds height="36.0" width="36.0" x="108.0" y="92.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="126.0" y="133.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_621" bpmnElement="do-task">
+        <dc:Bounds height="80.0" width="100.0" x="198.0" y="70.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="_BPMNShape_StartEvent_176" targetElement="_BPMNShape_ServiceTask_621">
+        <di:waypoint xsi:type="dc:Point" x="144.0" y="110.0"/>
+        <di:waypoint xsi:type="dc:Point" x="198.0" y="110.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="167.0" y="110.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_247" bpmnElement="EndEvent_2">
+        <dc:Bounds height="36.0" width="36.0" x="348.0" y="92.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="0.0" width="0.0" x="366.0" y="133.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_ServiceTask_621" targetElement="_BPMNShape_EndEvent_247">
+        <di:waypoint xsi:type="dc:Point" x="298.0" y="110.0"/>
+        <di:waypoint xsi:type="dc:Point" x="348.0" y="110.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="6.0" width="6.0" x="320.0" y="110.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
